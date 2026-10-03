@@ -7,168 +7,163 @@ import { getAnalysis } from "@/lib/aggregate";
 
 export const dynamic = "force-dynamic";
 
-function reasonLines(a: Awaited<ReturnType<typeof getAnalysis>>) {
-  const lines: Array<{ title: string; detail: string; level: string }> = [];
+function reasons(a: Awaited<ReturnType<typeof getAnalysis>>) {
+  const out: Array<{ title: string; detail: string; level: "high" | "mid" }> = [];
   const formDiff = a.homeForm.weightedPointsPct - a.awayForm.weightedPointsPct;
-  lines.push({
-    title: "Phong độ gần đây",
-    detail: formDiff >= 0
-      ? a.fixture.home.name + " có điểm phong độ cao hơn " + a.fixture.away.name + " trong chuỗi trận gần nhất."
-      : a.fixture.away.name + " đang có điểm phong độ cao hơn " + a.fixture.home.name + ".",
-    level: Math.abs(formDiff) >= 15 ? "Ảnh hưởng cao" : "Ảnh hưởng vừa"
+  out.push({
+    title: "Phong độ hiện tại",
+    detail: (formDiff >= 0 ? a.fixture.home.name : a.fixture.away.name) + " đang có điểm phong độ nhỉnh hơn trong chuỗi trận gần nhất.",
+    level: Math.abs(formDiff) >= 15 ? "high" : "mid"
   });
-
   if (a.homeElo && a.awayElo) {
-    const eloDiff = Math.round(a.homeElo - a.awayElo);
-    lines.push({
-      title: "Sức mạnh Elo",
-      detail: "Chênh lệch Elo hiện tại là " + Math.abs(eloDiff) + " điểm, nghiêng về " + (eloDiff >= 0 ? a.fixture.home.name : a.fixture.away.name) + ".",
-      level: Math.abs(eloDiff) >= 100 ? "Ảnh hưởng cao" : "Ảnh hưởng vừa"
+    const diff = a.homeElo - a.awayElo;
+    out.push({
+      title: "Chỉ số Elo & sức mạnh",
+      detail: "Chênh lệch Elo là " + Math.abs(Math.round(diff)) + " điểm, nghiêng về " + (diff >= 0 ? a.fixture.home.name : a.fixture.away.name) + ".",
+      level: Math.abs(diff) >= 100 ? "high" : "mid"
     });
   }
-
-  lines.push({
-    title: "Lực lượng",
-    detail: a.fixture.home.name + " ghi nhận " + a.homeInjuries + " trường hợp vắng mặt; " + a.fixture.away.name + " là " + a.awayInjuries + ".",
-    level: Math.abs(a.homeInjuries - a.awayInjuries) >= 2 ? "Ảnh hưởng cao" : "Ảnh hưởng vừa"
+  out.push({
+    title: "Lực lượng & chấn thương",
+    detail: a.fixture.home.name + " có " + a.homeInjuries + " trường hợp vắng mặt, " + a.fixture.away.name + " có " + a.awayInjuries + ".",
+    level: Math.abs(a.homeInjuries - a.awayInjuries) >= 2 ? "high" : "mid"
   });
-
-  lines.push({
-    title: "Lịch nghỉ",
-    detail: "Số ngày nghỉ gần nhất: " + a.fixture.home.name + " " + (a.homeForm.restDays ?? "—") + " ngày, " + a.fixture.away.name + " " + (a.awayForm.restDays ?? "—") + " ngày.",
-    level: "Ảnh hưởng vừa"
+  out.push({
+    title: "Lợi thế sân nhà",
+    detail: "Mô hình luôn áp dụng hệ số lợi thế sân nhà cho " + a.fixture.home.name + ".",
+    level: "high"
   });
-
-  return lines;
+  out.push({
+    title: "Lịch thi đấu & thể lực",
+    detail: "Ngày nghỉ: " + a.fixture.home.name + " " + (a.homeForm.restDays ?? "—") + " ngày, " + a.fixture.away.name + " " + (a.awayForm.restDays ?? "—") + " ngày.",
+    level: "mid"
+  });
+  return out;
 }
 
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const a = await getAnalysis(id);
-  const kickoffDate = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(a.fixture.date));
-  const kickoffTime = new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(a.fixture.date));
-  const reasons = reasonLines(a);
+  const date = new Intl.DateTimeFormat("vi-VN", { weekday:"long", day:"2-digit", month:"2-digit", year:"numeric", timeZone:"Asia/Ho_Chi_Minh" }).format(new Date(a.fixture.date));
+  const time = new Intl.DateTimeFormat("vi-VN", { hour:"2-digit", minute:"2-digit", timeZone:"Asia/Ho_Chi_Minh" }).format(new Date(a.fixture.date));
+  const r = reasons(a);
   const firstBookmaker = a.odds?.[0];
 
   return (
-    <main className="matchPage">
-      <div className="breadcrumb"><Link href="/">Trang chủ</Link><span>›</span><span>{a.fixture.league.name}</span><span>›</span><b>{a.fixture.home.name} vs {a.fixture.away.name}</b></div>
+    <main className="matchPage exactMatchPage">
+      <div className="breadcrumb"><Link href="/">⌂</Link><span>›</span><span>{a.fixture.league.name}</span><span>›</span><b>{a.fixture.home.name} vs {a.fixture.away.name}</b></div>
 
-      {a.fixture.isDemo && <div className="notice"><b>DỮ LIỆU MINH HỌA.</b><span>Trang này đang chạy bằng bộ dữ liệu demo.</span></div>}
+      {a.fixture.isDemo && <div className="notice"><b>DỮ LIỆU MINH HỌA.</b><span>Trang này đang chạy bằng dữ liệu demo.</span></div>}
 
-      <section className="matchBanner">
+      <section className="matchBanner exactMatchBanner">
         <div className="bannerTeam">
-          <TeamBadge name={a.fixture.home.name} logo={a.fixture.home.logo} size={88}/>
-          <div><strong>{a.fixture.home.name}</strong><small>Chủ nhà</small></div>
+          <TeamBadge name={a.fixture.home.name} logo={a.fixture.home.logo} size={80}/>
+          <div><strong>{a.fixture.home.name}</strong><small>(Chủ nhà)</small></div>
         </div>
-
         <div className="bannerCenter">
-          <span className="leagueBadge">{a.fixture.league.name}</span>
-          <small>{kickoffDate}</small>
-          <strong>{kickoffTime}</strong>
-          <span>{a.fixture.venue?.name ?? "Chưa rõ sân"}{a.fixture.venue?.city ? " · " + a.fixture.venue.city : ""}</span>
+          <span className="leagueBadge">⚽ {a.fixture.league.name}</span>
+          <small>{date}</small>
+          <strong>{time}</strong>
+          <span>⌾ {a.fixture.venue?.name ?? "Chưa rõ sân"}{a.fixture.venue?.city ? ", " + a.fixture.venue.city : ""}</span>
         </div>
-
         <div className="bannerTeam bannerTeamAway">
-          <div><strong>{a.fixture.away.name}</strong><small>Đội khách</small></div>
-          <TeamBadge name={a.fixture.away.name} logo={a.fixture.away.logo} size={88}/>
+          <div><strong>{a.fixture.away.name}</strong><small>(Đội khách)</small></div>
+          <TeamBadge name={a.fixture.away.name} logo={a.fixture.away.logo} size={80}/>
         </div>
       </section>
 
-      <nav className="matchTabs">
+      <nav className="matchTabs exactTabs">
         <a className="tabActive" href="#overview">▣ Tổng quan</a>
         <a href="#analysis">▥ Phân tích</a>
         <a href="#odds">⚖ Kèo nhà cái</a>
-        <a href="#form">◉ Phong độ</a>
-        <a href="#sources">◎ Nguồn dữ liệu</a>
+        <a href="#form">◉ Đội hình / phong độ</a>
+        <a href="#h2h">⚽ H2H</a>
       </nav>
 
-      <div className="matchContentGrid" id="overview">
+      <div className="matchContentGrid exactMatchGrid" id="overview">
         <div className="matchMainColumn">
           <ProbabilityPanel analysis={a}/>
 
-          <div id="odds">
-            <BookmakerOddsPanel odds={a.odds ?? []}/>
+          <div className="oddsAndFormRow">
+            <div id="odds"><BookmakerOddsPanel odds={a.odds ?? []}/></div>
+            <section className="panel compactFormPanel" id="form">
+              <div className="panelHeading">
+                <div className="panelHeadingMain"><span className="sectionIcon">◉</span><div><h2>Phong độ gần đây</h2><p>5 trận gần nhất</p></div></div>
+              </div>
+              <div className="formCompare stackedFormCompare">
+                <FormList name={a.fixture.home.name} form={a.homeForm}/>
+                <FormList name={a.fixture.away.name} form={a.awayForm}/>
+              </div>
+            </section>
           </div>
 
-          <section className="panel" id="form">
-            <div className="panelHeading">
-              <div className="panelHeadingMain"><span className="sectionIcon">◉</span><div><h2>Phong độ gần đây</h2><p>So sánh 5 trận gần nhất của hai đội.</p></div></div>
-            </div>
-            <div className="formCompare">
-              <FormList name={a.fixture.home.name} form={a.homeForm}/>
-              <FormList name={a.fixture.away.name} form={a.awayForm}/>
-            </div>
-          </section>
+          <div className="bottomAnalysisGrid">
+            <section className="panel seasonStatsPanel">
+              <div className="panelHeading">
+                <div className="panelHeadingMain"><span className="sectionIcon">◉</span><div><h2>Thống kê nhanh</h2><p>Chỉ số đang dùng trong mô hình</p></div></div>
+              </div>
+              <div className="seasonCompare">
+                <div><span>Bàn thắng TB</span><b>{a.homeForm.avgGoalsFor.toFixed(2)}</b><i><em style={{width: Math.min(100,a.homeForm.avgGoalsFor/3*100)+"%"}}/></i><b>{a.awayForm.avgGoalsFor.toFixed(2)}</b></div>
+                <div><span>Bàn thua TB</span><b>{a.homeForm.avgGoalsAgainst.toFixed(2)}</b><i><em style={{width: Math.min(100,a.homeForm.avgGoalsAgainst/3*100)+"%"}}/></i><b>{a.awayForm.avgGoalsAgainst.toFixed(2)}</b></div>
+                <div><span>Elo</span><b>{a.homeElo?.toFixed(0) ?? "—"}</b><i><em style={{width:"64%"}}/></i><b>{a.awayElo?.toFixed(0) ?? "—"}</b></div>
+                <div><span>Ngày nghỉ</span><b>{a.homeForm.restDays ?? "—"}</b><i><em style={{width:"52%"}}/></i><b>{a.awayForm.restDays ?? "—"}</b></div>
+                <div><span>Vắng mặt</span><b>{a.homeInjuries}</b><i><em style={{width:"35%"}}/></i><b>{a.awayInjuries}</b></div>
+              </div>
+            </section>
 
-          <section className="matchMetricGrid">
-            <div className="metricTile"><span>Elo</span><b>{a.homeElo?.toFixed(0) ?? "—"} <i>:</i> {a.awayElo?.toFixed(0) ?? "—"}</b><small>PlayerElo</small></div>
-            <div className="metricTile"><span>Vắng mặt</span><b>{a.homeInjuries} <i>:</i> {a.awayInjuries}</b><small>Chấn thương / treo giò</small></div>
-            <div className="metricTile"><span>Ngày nghỉ</span><b>{a.homeForm.restDays ?? "—"} <i>:</i> {a.awayForm.restDays ?? "—"}</b><small>Từ trận gần nhất</small></div>
-            <div className="metricTile"><span>Thời tiết</span><b className="metricWeather">{a.weather?.label ?? "Chưa có"}</b><small>Open-Meteo</small></div>
-          </section>
-
-          <section className="panel explanationPanel" id="analysis">
-            <div className="panelHeading">
-              <div className="panelHeadingMain"><span className="sectionIcon">💡</span><div><h2>Vì sao hệ thống dự đoán như vậy?</h2><p>Các yếu tố đang tác động nhiều nhất đến mô hình.</p></div></div>
-            </div>
-            <div className="reasonList">
-              {reasons.map((reason, index) => (
-                <div className="reasonRow" key={reason.title}>
-                  <span className="reasonNumber">{index + 1}</span>
-                  <div><b>{reason.title}</b><p>{reason.detail}</p></div>
-                  <span className={reason.level.includes("cao") ? "impact impactHigh" : "impact"}>{reason.level}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="panel dataAuditPanel" id="sources">
-            <div className="panelHeading">
-              <div className="panelHeadingMain"><span className="sectionIcon">✓</span><div><h2>Kiểm tra nguồn dữ liệu</h2><p>Cập nhật {new Date(a.generatedAt).toLocaleString("vi-VN")}</p></div></div>
-            </div>
-            <div className="auditGrid">
-              {a.sources.map((source) => (
-                <div className="auditCard" key={source.name}>
-                  <span className={"auditBadge " + source.status}>{source.status === "ok" ? "✓" : source.status === "partial" ? "!" : "×"}</span>
-                  <div><b>{source.name}</b><p>{source.note}</p></div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        <aside className="matchRightRail">
-          <section className="sidePanel stickyPanel">
-            <div className="sidePanelHead"><b>🔥 Tóm tắt trận đấu</b></div>
-            <div className="summaryItem"><span>Xác suất cao nhất</span><b>{Math.max(a.prediction.homeWin, a.prediction.draw, a.prediction.awayWin).toFixed(1)}%</b></div>
-            <div className="summaryItem"><span>Tổng xG dự kiến</span><b>{(a.prediction.expectedHomeGoals + a.prediction.expectedAwayGoals).toFixed(2)}</b></div>
-            <div className="summaryItem"><span>Độ tin cậy</span><b>{a.confidence}%</b></div>
-            <div className="summaryItem"><span>Tỷ số nổi bật</span><b>{a.prediction.topScorelines[0]?.score ?? "—"}</b></div>
-          </section>
-
-          <section className="sidePanel">
-            <div className="sidePanelHead"><b>📈 Tỷ số đáng chú ý</b></div>
-            <div className="sidebarScorelines">
-              {a.prediction.topScorelines.slice(0, 5).map((score, index) => (
-                <div key={score.score} className={index === 0 ? "sidebarScore sidebarScoreHot" : "sidebarScore"}><b>{score.score}</b><span>{score.probability.toFixed(1)}%</span></div>
-              ))}
-            </div>
-          </section>
-
-          <section className="sidePanel">
-            <div className="sidePanelHead"><b>⚖ Thị trường tham khảo</b></div>
-            {firstBookmaker ? (
-              <div className="marketPreview">
-                <strong>{firstBookmaker.name}</strong>
-                {firstBookmaker.markets.slice(0, 3).map((market) => (
-                  <div key={market.name} className="marketPreviewBlock">
-                    <span>{market.name}</span>
-                    <div>{market.values.slice(0, 3).map((v) => <b key={v.value}>{v.value} <em>{v.odd}</em></b>)}</div>
+            <section className="panel explanationPanel" id="analysis">
+              <div className="panelHeading">
+                <div className="panelHeadingMain"><span className="sectionIcon">💡</span><div><h2>Vì sao hệ thống dự đoán như vậy?</h2><p>Các yếu tố tác động chính</p></div></div>
+              </div>
+              <div className="reasonList">
+                {r.map((item,index)=>(
+                  <div className="reasonRow" key={item.title}>
+                    <span className="reasonNumber">{index+1}</span>
+                    <div><b>{item.title}</b><p>{item.detail}</p></div>
+                    <span className={item.level==="high"?"impact impactHigh":"impact"}>{item.level==="high"?"Ảnh hưởng cao":"Ảnh hưởng trung bình"}</span>
                   </div>
                 ))}
               </div>
-            ) : <p className="sideNote">Chưa có odds pre-match cho trận này.</p>}
+            </section>
+
+            <section className="panel h2hPanel" id="h2h">
+              <div className="panelHeading"><div className="panelHeadingMain"><span className="sectionIcon">◉</span><div><h2>Lịch sử đối đầu</h2><p>{a.h2h.length || 0} trận gần nhất có dữ liệu</p></div></div></div>
+              <div className="h2hList">
+                {a.h2h.length ? a.h2h.slice(0,5).map((m)=>(
+                  <div key={m.fixtureId}><span>{new Date(m.date).toLocaleDateString("vi-VN")}</span><b>{m.opponent}</b><strong>{m.gf} - {m.ga}</strong></div>
+                )) : <p className="sideNote">Chưa có dữ liệu H2H.</p>}
+              </div>
+            </section>
+          </div>
+
+          <section className="panel dataAuditPanel" id="sources">
+            <div className="panelHeading"><div className="panelHeadingMain"><span className="sectionIcon">✓</span><div><h2>Kiểm tra nguồn dữ liệu</h2><p>Cập nhật {new Date(a.generatedAt).toLocaleString("vi-VN")}</p></div></div></div>
+            <div className="auditGrid">{a.sources.map((s)=><div className="auditCard" key={s.name}><span className={"auditBadge "+s.status}>{s.status==="ok"?"✓":s.status==="partial"?"!":"×"}</span><div><b>{s.name}</b><p>{s.note}</p></div></div>)}</div>
+          </section>
+        </div>
+
+        <aside className="matchRightRail exactRightRail">
+          <section className="sidePanel">
+            <div className="sidePanelHead"><b>🔥 Kèo nổi bật hôm nay</b><span>Xem thêm ›</span></div>
+            {firstBookmaker?.markets.slice(0,3).map((m)=>(
+              <div className="tipRow" key={m.name}><span className="tipIcon">⚽</span><div><b>{m.name}</b><small>{m.values[0]?.value ?? "Thị trường"} · {a.fixture.league.name}</small></div><strong>{m.values[0]?.odd ?? "—"}</strong></div>
+            )) ?? <p className="sideNote">Chưa có odds nổi bật.</p>}
+          </section>
+
+          <section className="sidePanel dataSignalPanel">
+            <div className="sidePanelHead"><b>🎯 Đề xuất theo dữ liệu</b></div>
+            <div className="signalCard"><span>1</span><div><b>Kịch bản 1X2</b><p>Xác suất cao nhất hiện là {Math.max(a.prediction.homeWin,a.prediction.draw,a.prediction.awayWin).toFixed(1)}%.</p></div><em>Tham khảo</em></div>
+            <div className="signalCard"><span>2</span><div><b>Tổng bàn kỳ vọng</b><p>Mô hình hiện cho tổng xG {(a.prediction.expectedHomeGoals+a.prediction.expectedAwayGoals).toFixed(2)}.</p></div><em>Dữ liệu</em></div>
+            <div className="signalCard"><span>3</span><div><b>Tỷ số nổi bật</b><p>{a.prediction.topScorelines[0]?.score ?? "—"} đang có xác suất cao nhất trong ma trận Poisson.</p></div><em>Mô hình</em></div>
+            <div className="signalCard"><span>4</span><div><b>Độ tin cậy</b><p>Data confidence hiện tại {a.confidence}%.</p></div><em>Audit</em></div>
+          </section>
+
+          <section className="sidePanel">
+            <div className="sidePanelHead"><b>◎ Dữ liệu trận</b></div>
+            <div className="summaryItem"><span>Thời tiết</span><b>{a.weather?.temperature != null ? a.weather.temperature+"°C" : "—"}</b></div>
+            <div className="summaryItem"><span>Vắng mặt</span><b>{a.homeInjuries} : {a.awayInjuries}</b></div>
+            <div className="summaryItem"><span>Ngày nghỉ</span><b>{a.homeForm.restDays ?? "—"} : {a.awayForm.restDays ?? "—"}</b></div>
+            <div className="summaryItem"><span>Data confidence</span><b>{a.confidence}%</b></div>
           </section>
         </aside>
       </div>
