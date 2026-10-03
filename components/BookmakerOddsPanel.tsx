@@ -1,47 +1,49 @@
 import type { BookmakerOdds } from "@/lib/types";
 
 const marketLabels: Record<string, string> = {
-  "Match Winner": "Kèo châu Âu 1X2",
+  "Match Winner": "1X2",
   "Goals Over/Under": "Tài / Xỉu",
   "Asian Handicap": "Kèo châu Á",
-  "Both Teams Score": "Cả hai đội ghi bàn",
+  "Both Teams Score": "BTTS",
   "Double Chance": "Double Chance",
-  "Correct Score": "Tỉ số chính xác"
+  "Correct Score": "Tỷ số chính xác"
 };
 
 export function BookmakerOddsPanel({ odds }: { odds: BookmakerOdds[] }) {
   return (
-    <section className="card oddsPanel">
-      <div className="cardTitle">
-        <div>
-          <div className="eyebrow">ODDS THỊ TRƯỜNG</div>
-          <strong>Kèo nhà cái trước trận</strong>
+    <section className="panel oddsPanel">
+      <div className="panelHeading">
+        <div className="panelHeadingMain">
+          <span className="sectionIcon">⚖</span>
+          <div>
+            <h2>So sánh tỷ lệ kèo nhà cái</h2>
+            <p>Pre-match odds từ API-Football, cache 3 giờ để tiết kiệm quota.</p>
+          </div>
         </div>
-        <span>API-Football · cache 3 giờ</span>
+        <span className="updatedAt">{odds.length ? odds.length + " nhà cái" : "Chưa có odds"}</span>
       </div>
 
       {!odds.length ? (
         <div className="oddsEmpty">Trận này chưa có dữ liệu kèo pre-match hoặc nguồn odds chưa cập nhật.</div>
       ) : (
-        <div className="bookmakerGrid">
-          {odds.map((bookmaker) => (
-            <article className="bookmakerCard" key={bookmaker.id}>
-              <div className="bookmakerHead">
-                <strong>{bookmaker.name}</strong>
-                <small>{bookmaker.updatedAt ? new Date(bookmaker.updatedAt).toLocaleString("vi-VN") : "Chưa rõ giờ cập nhật"}</small>
+        <div className="oddsBookmakers">
+          {odds.slice(0, 6).map((bookmaker) => (
+            <article className="bookmakerStrip" key={bookmaker.id}>
+              <div className="bookmakerName">
+                <span className="bookmakerLogo">B</span>
+                <div><strong>{bookmaker.name}</strong><small>{bookmaker.updatedAt ? new Date(bookmaker.updatedAt).toLocaleString("vi-VN") : "Chưa rõ giờ cập nhật"}</small></div>
               </div>
 
-              <div className="marketList">
-                {bookmaker.markets.map((market) => (
-                  <div className="marketBlock" key={String(bookmaker.id) + "-" + String(market.id ?? market.name)}>
-                    <div className="marketName">{marketLabels[market.name] ?? market.name}</div>
-                    <div className="oddsValues">
-                      {market.values.map((value, index) => (
-                        <div className="oddChip" key={value.value + "-" + String(index)}>
-                          <span>{value.value}</span>
-                          <b>{value.odd}</b>
-                          {value.impliedProbability != null && <small>≈ {value.impliedProbability.toFixed(1)}%</small>}
-                        </div>
+              <div className="bookmakerMarkets">
+                {bookmaker.markets.slice(0, 5).map((market) => (
+                  <div className="marketColumn" key={String(bookmaker.id) + "-" + String(market.id ?? market.name)}>
+                    <span>{marketLabels[market.name] ?? market.name}</span>
+                    <div>
+                      {market.values.slice(0, 4).map((value) => (
+                        <b key={value.value}>
+                          <small>{value.value}</small>
+                          <em>{value.odd}</em>
+                        </b>
                       ))}
                     </div>
                   </div>
@@ -52,7 +54,7 @@ export function BookmakerOddsPanel({ odds }: { odds: BookmakerOdds[] }) {
         </div>
       )}
 
-      <p className="oddsDisclaimer">Tỷ lệ cược có thể thay đổi theo thời gian và nhà cái. Xác suất “≈” chỉ là 1 / odds thập phân, chưa loại biên lợi nhuận của nhà cái; phần này chỉ dùng để tham khảo dữ liệu thị trường.</p>
+      <p className="oddsDisclaimer">Xác suất ngầm định từ odds không đồng nghĩa với dự đoán của mô hình và chưa loại biên lợi nhuận của nhà cái.</p>
     </section>
   );
 }
