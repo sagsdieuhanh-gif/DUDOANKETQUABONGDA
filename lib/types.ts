@@ -60,6 +60,25 @@ export type Prediction = {
   modelNote: string;
 };
 
+export type OddsValue = {
+  value: string;
+  odd: string;
+  impliedProbability?: number;
+};
+
+export type OddsMarket = {
+  id?: number;
+  name: string;
+  values: OddsValue[];
+};
+
+export type BookmakerOdds = {
+  id: number;
+  name: string;
+  updatedAt?: string;
+  markets: OddsMarket[];
+};
+
 export type MatchAnalysis = {
   fixture: Fixture;
   homeForm: TeamForm;
@@ -70,6 +89,7 @@ export type MatchAnalysis = {
   awayInjuries: number;
   h2h: RecentMatch[];
   weather?: Weather;
+  odds?: BookmakerOdds[];
   verifiedByFootballData: boolean;
   externalPrediction?: { home: number; draw: number; away: number };
   prediction: Prediction;
