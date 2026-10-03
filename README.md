@@ -67,3 +67,7 @@ Không dùng prefix `NEXT_PUBLIC_` cho các key bí mật.
 ## 7. Lưu ý
 
 Free tier phù hợp prototype/hobby. Trước khi triển khai commercial, kiểm tra lại điều khoản sử dụng của từng nguồn dữ liệu.
+
+## UI status
+
+Current production target: sportsbook redesign (dark green, responsive home + match analysis).
