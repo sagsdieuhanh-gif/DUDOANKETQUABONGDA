@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071012">
+<title>KèoBóng AI — GitHub Pages</title><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="topbar"><div class="brand"><span>⚽</span><b>KèoBóng <em>AI</em></b></div><nav><a class="active" href="#">Trang chủ</a><a href="#matches">Lịch đấu</a><a href="#featured">Soi kèo</a><a href="#odds">Tỷ lệ</a></nav><div class="search">⌕  Tìm trận đấu, giải đấu, đội bóng...</div><button>Xem dự đoán →</button></header>
+<main><section class="hero"><div><h1>Dự đoán bóng đá thông minh, <span>dễ xem, dễ dùng</span></h1><p>Dữ liệu được GitHub Actions tổng hợp mỗi 1 giờ từ API-Football và football-data.org, sau đó cache thành JSON để GitHub Pages hiển thị mà không lộ API key.</p><div class="chips"><b>▦ Hôm nay</b><span>▣ Ngày mai</span><span>♞ Premier League</span><span>◆ La Liga</span><span>⚽ Champions League</span><span>🔥 Kèo hot</span></div></div></section>
+<div id="status" class="status">Đang tải dữ liệu...</div>
+<section class="layout"><aside class="left"><section class="panel"><h3>Giải đấu phổ biến</h3><div id="leagues"></div></section><section class="panel"><h3>Thống kê nhanh</h3><div id="stats"></div></section></aside>
+<section class="center"><section id="featured" class="featured"></section><div class="section-head"><h2>Trận đấu sắp diễn ra</h2><span id="updated"></span></div><div id="matches" class="match-grid"></div><section id="odds" class="panel odds-panel"><h3>Tỷ lệ kèo nhà cái</h3><div id="oddsTable"></div></section></section>
+<aside class="right"><section class="panel"><h3>🔥 Top kèo nổi bật</h3><div id="tips"></div></section><section class="panel"><h3>◈ Nguồn dữ liệu</h3><div id="sources"></div></section><section class="panel"><h3>◉ Cập nhật</h3><p class="note">GitHub Actions tự lấy dữ liệu mới mỗi 1 giờ. Bạn cũng có thể vào Actions → GitHub Pages Football Data → Run workflow để cập nhật ngay.</p></section></aside></section></main>
+<footer>⚽ KèoBóng AI · GitHub Pages + GitHub Actions · Dữ liệu chỉ mang tính tham khảo.</footer><script src="./app.js"></script>
+</body></html>

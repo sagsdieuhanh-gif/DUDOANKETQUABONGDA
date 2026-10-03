@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-10-03T17:25:21.572Z",
+  "date": "2026-10-04",
+  "mode": "demo",
+  "sources": {
+    "apiFootball": {
+      "ok": false,
+      "note": "Chờ GitHub Actions lấy dữ liệu."
+    },
+    "footballData": {
+      "ok": false,
+      "note": "Chờ GitHub Actions lấy dữ liệu."
+    }
+  },
+  "fixtures": [],
+  "footballDataMatches": 0
+}
