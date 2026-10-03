@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 360">
+<defs>
+  <linearGradient id="g" x1="0" x2="1"><stop stop-color="#06110d"/><stop offset=".52" stop-color="#0b2017"/><stop offset="1" stop-color="#07130f"/></linearGradient>
+  <radialGradient id="r" cx=".78" cy=".15" r=".48"><stop stop-color="#79ffae" stop-opacity=".32"/><stop offset=".35" stop-color="#6afca2" stop-opacity=".09"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#18261e"/><stop offset="1" stop-color="#0a0d0b"/></linearGradient>
+</defs>
+<rect width="1600" height="360" fill="url(#g)"/>
+<rect width="1600" height="360" fill="url(#r)"/>
+<g opacity=".34" fill="#d7ffe4">
+  <circle cx="70" cy="78" r="2"/><circle cx="140" cy="64" r="1.6"/><circle cx="213" cy="90" r="2.2"/><circle cx="304" cy="52" r="1.8"/>
+  <circle cx="410" cy="80" r="2"/><circle cx="505" cy="50" r="1.7"/><circle cx="612" cy="76" r="2.1"/><circle cx="730" cy="55" r="1.7"/>
+  <circle cx="850" cy="78" r="2"/><circle cx="970" cy="60" r="1.8"/><circle cx="1090" cy="88" r="2"/><circle cx="1220" cy="56" r="1.5"/>
+  <circle cx="1360" cy="78" r="2.1"/><circle cx="1500" cy="54" r="1.6"/>
+</g>
+<g opacity=".16" stroke="#a7ffd0">
+  <path d="M0 120 Q400 55 800 118 T1600 110" fill="none"/><path d="M0 146 Q420 96 800 140 T1600 135" fill="none"/>
+</g>
+<path d="M0 260 Q800 200 1600 258V360H0Z" fill="#08120e"/>
+<path d="M0 292 Q800 238 1600 294" stroke="#173a28" fill="none"/>
+<g transform="translate(1160 20)">
+  <ellipse cx="150" cy="292" rx="140" ry="20" fill="#000" opacity=".28"/>
+  <circle cx="148" cy="64" r="35" fill="#b6a08a"/>
+  <path d="M112 54q40-52 79-5q-10 4-14 20q-39-23-65-15z" fill="#171a18"/>
+  <path d="M92 105q55-33 117 1l40 120q-64 31-155 3z" fill="url(#p)" stroke="#234c35"/>
+  <path d="M103 118q46 19 96 0" stroke="#41664f" fill="none"/>
+  <text x="150" y="151" fill="#cde8d6" font-size="14" text-anchor="middle" font-family="Arial" font-weight="700">FOOTBALL</text>
+  <text x="150" y="171" fill="#cde8d6" font-size="14" text-anchor="middle" font-family="Arial" font-weight="700">NEVER STOPS</text>
+  <path d="M92 118L42 212l33 14 49-69zM209 118l47 93-30 17-50-72z" fill="#12241a"/>
+</g>
+</svg>
