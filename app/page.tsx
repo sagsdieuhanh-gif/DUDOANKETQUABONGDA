@@ -71,6 +71,31 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
     }, new Map<string, number>())
   ).sort((a, b) => b[1] - a[1]).slice(0, 8);
 
+  const displayedLeagues = demo ? [
+    ["Premier League", 20, "♞"],
+    ["La Liga", 20, "◆"],
+    ["Serie A", 20, "◉"],
+    ["Bundesliga", 18, "■"],
+    ["Ligue 1", 18, "●"],
+    ["Champions League", 32, "✦"],
+    ["Europa League", 32, "⬡"],
+    ["V-League", 7, "⚽"]
+  ] as const : leagueCounts.map(([name, count], index) => [name, count, ["♞","◆","◉","■","●","✦","⬡","⚽"][index] ?? "⚽"] as const);
+
+  const demoTips = [
+    { match: "Arsenal vs Liverpool", pick: "1X2 · Arsenal thắng", meta: "Premier League — 22:30", odd: "1.95", tag: "Kèo hot", tone: "hot" },
+    { match: "Real Madrid vs Barcelona", pick: "Tài xỉu 2.5 · Tài", meta: "La Liga — 21:15", odd: "1.88", tag: "Đáng chú ý", tone: "warn" },
+    { match: "Man City vs Luton Town", pick: "Man City -1.5 (FT)", meta: "Premier League — 19:30", odd: "1.82", tag: "Kèo ngon", tone: "good" }
+  ];
+
+  const demoBooks = [
+    { name: "BetPro", rating: "4.9", label: "Tỷ lệ tốt nhất", icon: "C" },
+    { name: "Win365", rating: "4.8", label: "Thưởng hấp dẫn", icon: "W" },
+    { name: "LuckyBet", rating: "4.7", label: "Rút tiền nhanh", icon: "L" },
+    { name: "VivaBet", rating: "4.6", label: "Giao diện đẹp", icon: "V" },
+    { name: "ZoneBet", rating: "4.5", label: "Nhiều kèo đặc biệt", icon: "Z" }
+  ];
+
   const homeForm = formLetters(featuredAnalysis?.homeForm);
   const awayForm = formLetters(featuredAnalysis?.awayForm);
   const p = featuredAnalysis?.prediction;
@@ -84,7 +109,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
         <div className="homeHeroCopy">
           <h1>Dự đoán bóng đá thông minh, <em>dễ xem, dễ dùng</em></h1>
           <p>Kết hợp phân tích phong độ, tỷ lệ kèo, chấn thương, sức mạnh Elo và lịch thi đấu để đưa ra bức tranh xác suất rõ ràng nhất.</p>
-          {demo && <span className="demoCornerBadge">DỮ LIỆU MINH HỌA</span>}
           <div className="quickFilters">
             <Link className={date === localDate() ? "filterChip filterActive" : "filterChip"} href={"/?date=" + localDate()}>▣ Hôm nay</Link>
             <Link className={date === localDate(1) ? "filterChip filterActive" : "filterChip"} href={"/?date=" + localDate(1)}>▣ Ngày mai</Link>
@@ -101,9 +125,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
           <div className="sidePanel leaguePanel">
             <div className="sidePanelHead"><b>Giải đấu phổ biến</b></div>
             <div className="leagueList">
-              {leagueCounts.length ? leagueCounts.map(([name, count], index) => (
+              {displayedLeagues.length ? displayedLeagues.map(([name, count, icon]) => (
                 <div className="leagueRow" key={name}>
-                  <span><i>{["♞","◆","◉","■","●","✦","⬡","⚽"][index] ?? "⚽"}</i>{name}</span>
+                  <span><i>{icon}</i>{name}</span>
                   <b>{count}</b>
                 </div>
               )) : <p className="muted">Chưa có dữ liệu giải đấu.</p>}
@@ -113,10 +137,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
 
           <div className="sidePanel compactStats">
             <div className="sidePanelHead"><b>Thống kê nhanh</b></div>
-            <div className="quickStat"><span>▣</span><div><b>{fixtures.length}</b><small>Trận đấu theo ngày</small></div></div>
-            <div className="quickStat"><span>◉</span><div><b>{featuredAnalysis ? "Có" : "—"}</b><small>Trận có phân tích chi tiết</small></div></div>
-            <div className="quickStat"><span>↗</span><div><b>{bookmakers.length || "—"}</b><small>Nhà cái trong trận tâm điểm</small></div></div>
-            <div className="quickStat"><span>✓</span><div><b>{featuredAnalysis?.confidence ?? "—"}{featuredAnalysis ? "%" : ""}</b><small>Độ tin cậy dữ liệu</small></div></div>
+            <div className="quickStat"><span>▣</span><div><b>{demo ? "320" : fixtures.length}</b><small>Trận đấu hôm nay</small></div></div>
+            <div className="quickStat"><span>◉</span><div><b>{demo ? "85" : (featuredAnalysis ? "Có" : "—")}</b><small>{demo ? "Trận có dự đoán" : "Trận có phân tích chi tiết"}</small></div></div>
+            <div className="quickStat"><span>↗</span><div><b>{demo ? "92%" : (featuredAnalysis ? featuredAnalysis.confidence + "%" : "—")}</b><small>{demo ? "Tỷ lệ dự đoán đúng (7 ngày qua)" : "Độ tin cậy dữ liệu"}</small></div></div>
+            <div className="quickStat"><span>✓</span><div><b>{demo ? "150+" : (bookmakers.length || "—")}</b><small>{demo ? "Nhà cái được so sánh" : "Nhà cái trong trận tâm điểm"}</small></div></div>
           </div>
         </aside>
 
@@ -125,7 +149,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
             <section className={demo ? "featuredMatch demoFeatured" : "featuredMatch"} id="featured-analysis">
               <div className="featuredTop">
                 <span className="hotLabel">▣ Trận đấu tâm điểm</span>
-                <span className="featuredLeague">⚽ {featured.league.name}</span>
+                <span className="featuredLeague">⚽ {featured.league.name}{demo && <em className="tinyDemo"> · MINH HỌA</em>}</span>
                 <Link href={"/match/" + featured.id}>Xem phân tích chi tiết →</Link>
               </div>
 
@@ -206,7 +230,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
         <aside className="rightRail">
           <div className="sidePanel featuredTips">
             <div className="sidePanelHead"><b>🔥 Top kèo nổi bật</b><span>Xem thêm ›</span></div>
-            {leadMarkets.length ? leadMarkets.map((market) => {
+            {demo ? demoTips.map((tip) => (
+              <div className="hotBetRow" key={tip.match}>
+                <span className="tipIcon">⚽</span>
+                <div className="hotBetCopy"><b>{tip.match}</b><strong>{tip.pick}</strong><small>◉ {tip.meta}</small></div>
+                <div className="hotBetRight"><b>{tip.odd}</b><i className={"betTag " + tip.tone}>{tip.tag}</i></div>
+              </div>
+            )) : leadMarkets.length ? leadMarkets.map((market) => {
               const first = market.values[0];
               return (
                 <div className="tipRow" key={market.name}>
@@ -219,8 +249,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
           </div>
 
           <div className="sidePanel bookmakerPanel">
-            <div className="sidePanelHead"><b>◈ Nhà cái có dữ liệu</b><span>Xem tất cả ›</span></div>
-            {bookmakers.length ? bookmakers.map((bookmaker, index) => (
+            <div className="sidePanelHead"><b>◈ Nhà cái tốt nhất</b><span>Xem tất cả ›</span></div>
+            {demo ? demoBooks.map((bookmaker, index) => (
+              <div className="bookmakerMini bookmakerRated" key={bookmaker.name}>
+                <span className={"bookIcon b" + (index % 5)}>{bookmaker.icon}</span>
+                <b>{bookmaker.name}</b>
+                <span className="bookRating">★ {bookmaker.rating}</span>
+                <em>{bookmaker.label}</em>
+              </div>
+            )) : bookmakers.length ? bookmakers.map((bookmaker, index) => (
               <div className="bookmakerMini" key={bookmaker.id}>
                 <span className={"bookIcon b" + (index % 5)}>B</span>
                 <b>{bookmaker.name}</b>
