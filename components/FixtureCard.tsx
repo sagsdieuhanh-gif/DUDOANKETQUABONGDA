@@ -12,17 +12,26 @@ export function FixtureCard({ fixture }: { fixture: Fixture }) {
   return (
     <Link className="matchCard" href={"/match/" + fixture.id}>
       <div className="matchCardTop">
-        <span className="leaguePill">{fixture.league.name}</span>
+        <span className="leaguePill">⚽ {fixture.league.name}</span>
         <time>{kickoff}</time>
       </div>
+
       <div className="matchTeams">
-        <div className="miniTeam"><TeamBadge name={fixture.home.name} logo={fixture.home.logo} size={38}/><strong>{fixture.home.name}</strong></div>
+        <div className="miniTeam">
+          <TeamBadge name={fixture.home.name} logo={fixture.home.logo} size={30}/>
+          <strong>{fixture.home.name}</strong>
+        </div>
         <span className="vsDot">VS</span>
-        <div className="miniTeam miniTeamAway"><strong>{fixture.away.name}</strong><TeamBadge name={fixture.away.name} logo={fixture.away.logo} size={38}/></div>
+        <div className="miniTeam miniTeamAway">
+          <strong>{fixture.away.name}</strong>
+          <TeamBadge name={fixture.away.name} logo={fixture.away.logo} size={30}/>
+        </div>
       </div>
-      <div className="matchCardBottom">
-        <span>{fixture.venue?.name ?? "Chưa xác định sân"}</span>
-        <b>Phân tích →</b>
+
+      <div className="miniOdds">
+        <span><i>1</i><b>—</b></span>
+        <span><i>X</i><b>—</b></span>
+        <span><i>2</i><b>—</b></span>
       </div>
     </Link>
   );
