@@ -84,6 +84,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
         <div className="homeHeroCopy">
           <h1>Dự đoán bóng đá thông minh, <em>dễ xem, dễ dùng</em></h1>
           <p>Kết hợp phân tích phong độ, tỷ lệ kèo, chấn thương, sức mạnh Elo và lịch thi đấu để đưa ra bức tranh xác suất rõ ràng nhất.</p>
+          {demo && <span className="demoCornerBadge">DỮ LIỆU MINH HỌA</span>}
           <div className="quickFilters">
             <Link className={date === localDate() ? "filterChip filterActive" : "filterChip"} href={"/?date=" + localDate()}>▣ Hôm nay</Link>
             <Link className={date === localDate(1) ? "filterChip filterActive" : "filterChip"} href={"/?date=" + localDate(1)}>▣ Ngày mai</Link>
@@ -94,13 +95,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
           </div>
         </div>
       </section>
-
-      {demo && (
-        <div className="notice noticeWide">
-          <b>Demo mode.</b>
-          <span>Deployment hiện chưa lấy được dữ liệu thật từ API-Football; giao diện vẫn hiển thị đầy đủ để kiểm tra.</span>
-        </div>
-      )}
 
       <section className="dashboardShell exactShell" id="matches">
         <aside className="leftRail">
@@ -128,7 +122,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
 
         <div className="centerColumn">
           {featured ? (
-            <section className="featuredMatch" id="featured-analysis">
+            <section className={demo ? "featuredMatch demoFeatured" : "featuredMatch"} id="featured-analysis">
               <div className="featuredTop">
                 <span className="hotLabel">▣ Trận đấu tâm điểm</span>
                 <span className="featuredLeague">⚽ {featured.league.name}</span>

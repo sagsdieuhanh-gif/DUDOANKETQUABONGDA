@@ -328,3 +328,24 @@ radial-gradient(circle at 50% 20%,rgba(31,146,82,.12),transparent 25rem)}
  .exactMatchPage{width:calc(100% - 16px)}.exactMatchBanner{grid-template-columns:1fr 78px 1fr;min-height:140px}.exactMatchBanner .bannerTeam .teamBadge{display:none}.exactMatchBanner .bannerTeam strong{font-size:12px}.exactMatchBanner .bannerCenter>strong{font-size:25px}.exactTabs{display:flex;overflow:auto}.exactTabs a{min-width:118px}
  .exactMatchPage .predictionLayout{grid-template-columns:1fr}.exactMatchPage .probabilityBoard{grid-template-columns:1fr 68px 1fr}.exactMatchPage .probTeam .teamBadge{display:none}.stackedFormCompare{grid-template-columns:1fr!important}.exactRightRail{grid-template-columns:1fr}.exactMatchPage .auditGrid{grid-template-columns:1fr}
 }
+
+/* ===== PIXEL MATCH PASS 2 ===== */
+.topNavInner,.exactHome,.siteFooter{max-width:1672px}
+.exactHome{width:min(1672px,calc(100% - 24px))}
+.exactHero{position:relative;overflow:hidden;isolation:isolate}
+.exactHero:after{content:"";position:absolute;z-index:-1;right:0;top:0;width:55%;height:100%;background:linear-gradient(90deg,rgba(6,17,13,1) 0%,rgba(6,17,13,.2) 28%,rgba(6,17,13,0) 55%),url('/hero-stadium.svg') right center/cover no-repeat;opacity:.95}
+.exactHero .homeHeroCopy{position:relative;z-index:1}
+.demoCornerBadge{display:inline-block;margin-top:7px;padding:4px 8px;border:1px solid rgba(255,210,94,.42);border-radius:6px;background:rgba(255,210,94,.08);color:#ffd25e;font-size:8px;font-weight:900;letter-spacing:.08em}
+.noticeWide{display:none!important}
+.demoFeatured{position:relative;isolation:isolate}
+.demoFeatured:before,.demoFeatured:after{content:"";position:absolute;z-index:-1;bottom:77px;width:170px;height:132px;background:radial-gradient(circle at 50% 70%,rgba(37,116,70,.2),transparent 70%);opacity:.65}
+.demoFeatured:before{left:8px}.demoFeatured:after{right:8px}
+.exactShell{padding-top:9px}
+.exactMatchesGrid{min-height:220px}
+.matchCard{min-height:104px}
+.homeOdds{min-height:154px}
+.featuredTips{min-height:150px}.bookmakerPanel{min-height:170px}.homeFormPanel{min-height:206px}
+@media(min-width:1500px){
+ .exactShell{grid-template-columns:250px minmax(0,1fr) 318px}
+ .featuredTeams{padding-left:38px;padding-right:38px}
+}
