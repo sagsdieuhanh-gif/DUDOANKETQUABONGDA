@@ -1,4 +1,4 @@
-import type { Fixture, RecentMatch, TeamForm } from "@/lib/types";
+import type { BookmakerOdds, Fixture, RecentMatch, TeamForm } from "@/lib/types";
 
 const BASE = "https://v3.football.api-sports.io";
 
@@ -117,6 +117,73 @@ export async function getH2H(homeId: number, awayId: number, last = 5): Promise<
 
 export function mapH2HForHome(rows: any[], homeTeamId: number): RecentMatch[] {
   return rows.map((row: any) => recentMatchForTeam(row, homeTeamId)).filter(Boolean) as RecentMatch[];
+}
+
+const preferredMarkets = [
+  "match winner",
+  "goals over/under",
+  "asian handicap",
+  "both teams score",
+  "double chance",
+  "correct score"
+];
+
+const preferredBookmakers = [
+  "Pinnacle",
+  "Bet365",
+  "Betfair",
+  "Unibet",
+  "William Hill",
+  "Bwin",
+  "1xBet"
+];
+
+function marketPriority(name: string) {
+  const index = preferredMarkets.indexOf(name.toLowerCase());
+  return index === -1 ? 999 : index;
+}
+
+function bookmakerPriority(name: string) {
+  const index = preferredBookmakers.findIndex((item) => item.toLowerCase() === name.toLowerCase());
+  return index === -1 ? 999 : index;
+}
+
+export async function getPrematchOdds(fixtureId: string | number): Promise<BookmakerOdds[]> {
+  const rows = await apiFootball("/odds?fixture=" + fixtureId, 10800);
+  const row = rows[0];
+  if (!row?.bookmakers?.length) return [];
+
+  return row.bookmakers
+    .map((bookmaker: any) => {
+      const preferred = (bookmaker.bets ?? [])
+        .filter((bet: any) => preferredMarkets.includes(String(bet.name ?? "").toLowerCase()))
+        .sort((a: any, b: any) => marketPriority(a.name) - marketPriority(b.name));
+
+      const markets = (preferred.length ? preferred : (bookmaker.bets ?? []).slice(0, 4))
+        .slice(0, 6)
+        .map((bet: any) => ({
+          id: bet.id,
+          name: bet.name,
+          values: (bet.values ?? []).slice(0, bet.name === "Correct Score" ? 12 : 8).map((value: any) => {
+            const decimal = Number(value.odd);
+            return {
+              value: String(value.value ?? ""),
+              odd: String(value.odd ?? ""),
+              impliedProbability: Number.isFinite(decimal) && decimal > 0 ? 100 / decimal : undefined
+            };
+          })
+        }));
+
+      return {
+        id: bookmaker.id,
+        name: bookmaker.name,
+        updatedAt: row.update,
+        markets
+      } satisfies BookmakerOdds;
+    })
+    .filter((bookmaker: BookmakerOdds) => bookmaker.markets.length > 0)
+    .sort((a: BookmakerOdds, b: BookmakerOdds) => bookmakerPriority(a.name) - bookmakerPriority(b.name))
+    .slice(0, 6);
 }
 
 export function isConfigured() {
