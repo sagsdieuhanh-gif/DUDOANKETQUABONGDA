@@ -282,3 +282,49 @@ radial-gradient(circle at 50% 20%,rgba(31,146,82,.12),transparent 25rem)}
  .exactHome{width:calc(100% - 18px)}.exactHero{margin:0 -9px;padding:22px 16px 13px;min-height:178px}.exactHero h1{font-size:29px}.exactHero p{font-size:12px;max-width:90%}
  .exactShell{grid-template-columns:1fr}.leftRail{display:none}.exactMatchesGrid{grid-template-columns:1fr}.featuredTeams{grid-template-columns:1fr 86px 1fr;padding:14px 10px}.featuredTeam .teamBadge{display:none}.featuredTeam strong{font-size:13px}.featuredKickoff strong{font-size:25px}.featuredNumbers{grid-template-columns:repeat(3,1fr)}.featuredNumbers>div:nth-child(4),.featuredNumbers>div:nth-child(5){display:none}
 }
+/* ===== MATCH MOCKUP LOCK ===== */
+.exactMatchPage{width:min(1600px,calc(100% - 34px));padding-top:8px}
+.exactMatchPage .breadcrumb{height:24px;margin:0 0 5px;font-size:9px}
+.exactMatchBanner{
+ min-height:174px;
+ padding:16px 34px 12px;
+ border-radius:0;
+ border-left:0;border-right:0;
+ background:
+   linear-gradient(90deg,rgba(5,13,10,.22),rgba(6,16,12,.12)),
+   url('/match-stadium.svg') center/cover no-repeat;
+}
+.exactMatchBanner .bannerTeam{gap:14px}.exactMatchBanner .bannerTeam strong{font-size:21px}.exactMatchBanner .bannerTeam small{font-size:9px}
+.exactMatchBanner .bannerCenter>strong{font-size:36px}.exactMatchBanner .bannerCenter>small{font-size:9px;margin-top:6px}.exactMatchBanner .leagueBadge{font-size:10px}.exactMatchBanner .bannerCenter>span:last-child{font-size:9px}
+.exactTabs{margin:0 0 10px;border-radius:0;border-left:0;border-right:0;height:42px}.exactTabs a{font-size:10px;padding:0;display:flex;align-items:center;justify-content:center}
+.exactMatchGrid{grid-template-columns:minmax(0,1fr) 300px;gap:10px}
+.exactMatchPage .panel{border-radius:9px;padding:12px}.exactMatchPage .panelHeading{margin-bottom:10px}.exactMatchPage .panelHeading h2{font-size:15px}.exactMatchPage .panelHeading p{font-size:8px}.exactMatchPage .sectionIcon{width:24px;height:24px;font-size:10px}
+.exactMatchPage .predictionPanel{padding:12px}
+.exactMatchPage .predictionLayout{grid-template-columns:minmax(0,1fr) 250px;gap:9px}
+.exactMatchPage .probabilityBoard{padding:14px 12px;border-radius:8px;grid-template-columns:1fr 95px 1fr}
+.exactMatchPage .probTeam strong,.exactMatchPage .probDraw strong{font-size:29px}.exactMatchPage .probTeam>div>span,.exactMatchPage .probDraw>span{font-size:10px}.exactMatchPage .probTeam small,.exactMatchPage .probDraw small{font-size:8px}
+.exactMatchPage .xgCard,.exactMatchPage .confidenceCard{padding:10px;border-radius:8px}.exactMatchPage .xgCard b{font-size:22px}
+.exactMatchPage .scorelineStrip{margin-top:9px}.exactMatchPage .scoreChip{padding:5px 8px}.exactMatchPage .scoreChip b{font-size:10px}.exactMatchPage .scoreChip small{font-size:8px}
+.oddsAndFormRow{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:10px}
+.oddsAndFormRow>div{min-width:0}.compactFormPanel{min-width:0}.stackedFormCompare{grid-template-columns:1fr!important;gap:8px}.stackedFormCompare .formTeam{padding:9px}.stackedFormCompare .formRows{display:none}.stackedFormCompare .formStats{margin-bottom:0}.stackedFormCompare .resultPills{margin:7px 0}.stackedFormCompare .formTeamHead strong{font-size:11px}
+.mockOddsPanel{padding:0!important;overflow:hidden}.mockOddsHeading{padding:10px 11px 0}.oddsTabs{display:flex;gap:4px;padding:0 10px 8px;overflow:auto}.oddsTabs span{white-space:nowrap;padding:6px 12px;border:1px solid #234635;border-radius:5px;font-size:8px;color:#a3b4aa;background:#0b1913}.oddsTabs .oddsTabActive{border-color:#20c961;color:#39f180;background:#0e2a1b}
+.matrixWrap{overflow-x:auto;border-top:1px solid #19382a}.matrixRow{display:grid;grid-template-columns:100px repeat(9,minmax(54px,1fr));min-width:720px;min-height:27px;align-items:center;border-top:1px solid rgba(27,59,43,.7);font-size:8px}.matrixRow>*{padding:0 7px;text-align:center}.matrixRow>strong{text-align:left}.matrixHeader{background:#10251b;color:#8da497;border-top:0;font-size:7px}.matrixRow b{font-size:8px;font-weight:700}.matrixRow:nth-child(3) b:nth-child(2){background:#134e2d;color:#6dff9d;border-radius:4px;padding-top:4px;padding-bottom:4px}
+.mockOddsPanel .oddsDisclaimer{padding:0 10px 9px;margin-top:8px}
+.bottomAnalysisGrid{display:grid;grid-template-columns:.9fr 1.25fr .8fr;gap:10px}
+.seasonCompare{display:grid;gap:7px}.seasonCompare>div{display:grid;grid-template-columns:74px 30px 1fr 30px;gap:6px;align-items:center;font-size:8px}.seasonCompare>div>span{color:#a7b7ae}.seasonCompare>div>b{text-align:center;font-size:9px}.seasonCompare i{height:5px;background:#192d24;border-radius:99px;overflow:hidden}.seasonCompare i em{display:block;height:100%;width:50%;background:#2fe875;border-radius:99px}
+.exactMatchPage .reasonRow{grid-template-columns:22px 1fr auto;padding:7px 0;gap:7px}.exactMatchPage .reasonNumber{width:20px;height:20px;font-size:8px}.exactMatchPage .reasonRow b{font-size:9px}.exactMatchPage .reasonRow p{font-size:7px;margin-top:2px}.exactMatchPage .impact{font-size:7px;padding:4px 6px}
+.h2hList{display:grid}.h2hList>div{display:grid;grid-template-columns:60px 1fr auto;gap:5px;padding:7px 0;border-top:1px solid #19372a;font-size:7px}.h2hList span{color:#7f9789}.h2hList b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.h2hList strong{font-size:8px}
+.exactRightRail{gap:10px}.exactRightRail .sidePanel{padding:10px}.exactRightRail .sidePanelHead{font-size:11px;padding-bottom:8px}.exactRightRail .tipRow{grid-template-columns:27px 1fr 43px;padding:8px 0}.exactRightRail .tipRow b{font-size:9px}.exactRightRail .tipRow small{font-size:7px}.exactRightRail .tipRow>strong{font-size:10px;padding:5px 6px}
+.dataSignalPanel{padding-bottom:6px!important}.signalCard{display:grid;grid-template-columns:22px 1fr auto;gap:7px;align-items:start;padding:9px 0;border-bottom:1px solid #19372a}.signalCard>span{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#5a43de;color:white;font-size:8px;font-weight:900}.signalCard div b{font-size:9px}.signalCard div p{font-size:7px;line-height:1.35;color:#899f92;margin:2px 0 0}.signalCard em{font-style:normal;font-size:7px;background:#133523;color:#63f291;border-radius:5px;padding:4px 5px}
+.exactRightRail .summaryItem{font-size:8px;padding:8px 0}.exactRightRail .summaryItem b{font-size:9px}
+.exactMatchPage .auditGrid{grid-template-columns:repeat(4,1fr)}.exactMatchPage .auditCard{padding:8px}.exactMatchPage .auditCard b{font-size:8px}.exactMatchPage .auditCard p{font-size:7px}
+@media(max-width:1180px){
+ .exactMatchGrid{grid-template-columns:1fr 250px}.oddsAndFormRow{grid-template-columns:1fr}.stackedFormCompare{grid-template-columns:1fr 1fr!important}.bottomAnalysisGrid{grid-template-columns:1fr 1fr}.h2hPanel{grid-column:1/-1}.exactMatchPage .auditGrid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+ .exactMatchBanner{padding:15px}.exactMatchGrid{grid-template-columns:1fr}.exactRightRail{display:grid;grid-template-columns:1fr 1fr 1fr}.oddsAndFormRow{grid-template-columns:1fr}.bottomAnalysisGrid{grid-template-columns:1fr}.h2hPanel{grid-column:auto}
+}
+@media(max-width:650px){
+ .exactMatchPage{width:calc(100% - 16px)}.exactMatchBanner{grid-template-columns:1fr 78px 1fr;min-height:140px}.exactMatchBanner .bannerTeam .teamBadge{display:none}.exactMatchBanner .bannerTeam strong{font-size:12px}.exactMatchBanner .bannerCenter>strong{font-size:25px}.exactTabs{display:flex;overflow:auto}.exactTabs a{min-width:118px}
+ .exactMatchPage .predictionLayout{grid-template-columns:1fr}.exactMatchPage .probabilityBoard{grid-template-columns:1fr 68px 1fr}.exactMatchPage .probTeam .teamBadge{display:none}.stackedFormCompare{grid-template-columns:1fr!important}.exactRightRail{grid-template-columns:1fr}.exactMatchPage .auditGrid{grid-template-columns:1fr}
+}
