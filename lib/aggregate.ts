@@ -33,11 +33,12 @@ export async function getAnalysis(id: string): Promise<MatchAnalysis> {
   if (!fixture) throw new Error("FIXTURE_NOT_FOUND");
   sources.push({ name: "API-Football", status: "ok", note: "Fixture + 5 trận gần nhất + injuries + H2H." });
 
-  const [homeMatches, awayMatches, injuriesFetch, h2hResult] = await Promise.all([
+  const [homeMatches, awayMatches, injuriesFetch, h2hResult, oddsFetch] = await Promise.all([
     api.getRecentMatches(fixture.home.id, fixture.date, 5).catch(() => []),
     api.getRecentMatches(fixture.away.id, fixture.date, 5).catch(() => []),
     api.getInjuries(id).then((data) => ({ data, ok: true })).catch(() => ({ data: [], ok: false })),
-    api.getH2H(fixture.home.id, fixture.away.id, 5).catch(() => [])
+    api.getH2H(fixture.home.id, fixture.away.id, 5).catch(() => []),
+    api.getPrematchOdds(id).then((data) => ({ data, ok: true })).catch(() => ({ data: [], ok: false }))
   ]);
 
   const homeForm = api.summarizeForm(homeMatches, fixture.date);
@@ -54,6 +55,15 @@ export async function getAnalysis(id: string): Promise<MatchAnalysis> {
     getWeather(fixture.venue?.city, fixture.date)
   ]);
 
+  sources.push({
+    name: "API-Football Odds",
+    status: oddsFetch.ok ? (oddsFetch.data.length ? "ok" : "partial") : "missing",
+    note: oddsFetch.data.length
+      ? "Có kèo pre-match từ " + oddsFetch.data.length + " nhà cái; cache 3 giờ để tiết kiệm quota."
+      : oddsFetch.ok
+        ? "API phản hồi bình thường nhưng trận này chưa có kèo pre-match."
+        : "Không tải được odds ở lần gọi hiện tại."
+  });
   sources.push({
     name: "football-data.org",
     status: fd.isConfigured() ? (verified ? "ok" : "partial") : "missing",
@@ -91,7 +101,7 @@ export async function getAnalysis(id: string): Promise<MatchAnalysis> {
 
   return {
     fixture, homeForm, awayForm, homeElo, awayElo, homeInjuries, awayInjuries,
-    h2h, weather, verifiedByFootballData: verified, externalPrediction,
+    h2h, weather, odds: oddsFetch.data, verifiedByFootballData: verified, externalPrediction,
     prediction, confidence, sources, generatedAt: new Date().toISOString()
   };
 }
